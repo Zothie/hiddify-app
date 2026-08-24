@@ -18,6 +18,10 @@ enum ProxyType {
   vless("VLESS"),
   tuic("TUIC"),
   hysteria2("Hysteria2"),
+  // juicity: third QUIC transport, kept alongside TUIC/Hysteria2 so that DPI
+  // which fingerprints those two individually cannot take the whole tunnel
+  // down. Implemented fork-side; upstream sing-box issue #788 was never merged.
+  juicity("Juicity"),
   mieru("Mieru"),
 
   selector("Selector"),

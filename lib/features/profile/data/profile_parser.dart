@@ -393,6 +393,8 @@ class ProfileParser {
         'vless' => fragment ?? ProxyType.vless.label,
         'trojan' => fragment ?? ProxyType.trojan.label,
         'tuic' => fragment ?? ProxyType.tuic.label,
+        // juicity: third QUIC transport for DPI diversity (see ray2sing/juicity.go).
+        'juicity' => fragment ?? ProxyType.juicity.label,
         'hy2' || 'hysteria2' => fragment ?? ProxyType.hysteria2.label,
         'hy' || 'hysteria' => fragment ?? ProxyType.hysteria.label,
         'ssh' => fragment ?? ProxyType.ssh.label,
