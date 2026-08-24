@@ -56,7 +56,12 @@ enum ServiceMode {
 enum BalancerStrategy {
   roundRobin("round-robin"),
   consistentHash("consistent-hashing"),
-  stickySession("sticky-sessions");
+  stickySession("sticky-sessions"),
+  // Try profiles in the order they are listed and use the first one that is
+  // actually reachable. Latency-based selection pins traffic to the nearest
+  // node even while a censor is throttling it; order expresses what the user
+  // actually wants.
+  priority("priority");
 
   const BalancerStrategy(this.key);
 
