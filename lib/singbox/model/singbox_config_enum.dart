@@ -61,7 +61,16 @@ enum BalancerStrategy {
   // actually reachable. Latency-based selection pins traffic to the nearest
   // node even while a censor is throttling it; order expresses what the user
   // actually wants.
-  priority("priority");
+  priority("priority"),
+  // Two-stage: first drop the profiles that cannot demonstrably move data,
+  // then among the survivors use the fastest by measured throughput.
+  //
+  // The filter matters because a censor's blocked node does not fail cleanly:
+  // it completes TLS and answers a latency probe instantly while carrying
+  // nothing, so a latency-ranked group happily selects a dead path. Ranking by
+  // measured speed rather than ping also stops a nearby relay from beating a
+  // distant but much faster exit.
+  throughput("throughput");
 
   const BalancerStrategy(this.key);
 
@@ -71,6 +80,11 @@ enum BalancerStrategy {
     roundRobin => t.pages.settings.routing.generalOptions.balancerStrategy.roundRobin,
     consistentHash => t.pages.settings.routing.generalOptions.balancerStrategy.consistentHash,
     stickySession => t.pages.settings.routing.generalOptions.balancerStrategy.stickySession,
+    // No translation key yet: the strategy is fork-local and the upstream
+    // translation bundle has no entry for it. A literal keeps the switch
+    // exhaustive without inventing keys in every locale file.
+    priority => "Priority (first working)",
+    throughput => "Fastest working (measured)",
   };
 }
 
