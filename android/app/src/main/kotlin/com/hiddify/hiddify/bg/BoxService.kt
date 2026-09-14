@@ -57,6 +57,7 @@ class BoxService(
         private const val TAG = "A/BoxService"
 
         private var initializeOnce = false
+        private var platformPinned = false
         private lateinit var workingDir: File
         private fun initialize() {
             System.setProperty("GODEBUG", "efence=1,stacktraceback=2");
@@ -161,6 +162,19 @@ class BoxService(
 
             DefaultNetworkMonitor.start()
             Libbox.setMemoryLimit(!Settings.disableMemoryLimit)
+            // Pin the platform interface in gomobile's ref table for the life
+            // of the process. Mobile.setup is called on every (re)start, but
+            // the Go side only keeps the object from the FIRST call and drops
+            // the parameter of every later one; when Go finalizes that dropped
+            // ref, Java's count for the same object reaches zero and it is
+            // removed - while Go still holds the proxy from the first call.
+            // The next OpenTun/GetInterfaces then aborts the process with
+            // "Unknown reference: 42". One extra increment makes the count
+            // unable to reach zero.
+            if (!platformPinned) {
+                Seq.incRef(platformInterface)
+                platformPinned = true
+            }
             val newService = try {
                 Mobile.setup(
                     SetupOptions().also {

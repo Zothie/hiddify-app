@@ -65,7 +65,7 @@ interface PlatformInterfaceWrapper : PlatformInterface {
             if (uid!=Process.INVALID_UID) {
                 val packages = Application.packageManager.getPackagesForUid(uid)
                 owner.userName = packages?.firstOrNull() ?: ""
-                owner.androidPackageName = owner.userName
+                owner.setAndroidPackageNames(StringArray(listOfNotNull(packages?.firstOrNull()).iterator()))
             }
             return owner
         } catch (e: Exception) {
@@ -76,17 +76,46 @@ interface PlatformInterfaceWrapper : PlatformInterface {
     }
 
     override fun startDefaultInterfaceMonitor(listener: InterfaceUpdateListener) {
-        DefaultNetworkMonitor.setListener(listener)
+        try {
+            DefaultNetworkMonitor.setListener(listener)
+        } catch (e: Throwable) {
+            Log.w("PlatformInterface", "startDefaultInterfaceMonitor failed", e)
+        }
     }
 
     override fun closeDefaultInterfaceMonitor(listener: InterfaceUpdateListener) {
-        DefaultNetworkMonitor.setListener(null)
+        try {
+            DefaultNetworkMonitor.setListener(null)
+        } catch (e: Throwable) {
+            Log.w("PlatformInterface", "closeDefaultInterfaceMonitor failed", e)
+        }
+    }
+
+    override fun registerMyInterface(name: String) {
+        // No-op: the core reports its tun interface name; nothing to do on Android.
+    }
+
+    override fun startNeighborMonitor(listener: com.hiddify.core.libbox.NeighborUpdateListener) {
+        // Android does not expose the neighbor table; no-op.
+    }
+
+    override fun closeNeighborMonitor(listener: com.hiddify.core.libbox.NeighborUpdateListener) {
+        // Android does not expose the neighbor table; no-op.
     }
 
     override fun getInterfaces(): NetworkInterfaceIterator {
-        val networks = Application.connectivity.allNetworks
-        val networkInterfaces = NetworkInterface.getNetworkInterfaces().toList()
         val interfaces = mutableListOf<LibboxNetworkInterface>()
+        try {
+            collectInterfaces(interfaces)
+        } catch (e: Throwable) {
+            Log.w("PlatformInterface", "getInterfaces failed", e)
+        }
+        return InterfaceArray(interfaces.iterator())
+    }
+
+    private fun collectInterfaces(interfaces: MutableList<LibboxNetworkInterface>) {
+        val networks = Application.connectivity.allNetworks
+        val networkInterfaces = NetworkInterface.getNetworkInterfaces()?.toList() ?: return
         for (network in networks) {
             val boxInterface = LibboxNetworkInterface()
             val linkProperties = Application.connectivity.getLinkProperties(network) ?: continue
@@ -137,7 +166,6 @@ interface PlatformInterfaceWrapper : PlatformInterface {
                 !networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
             interfaces.add(boxInterface)
         }
-        return InterfaceArray(interfaces.iterator())
     }
 
     override fun underNetworkExtension(): Boolean = false
@@ -147,18 +175,31 @@ interface PlatformInterfaceWrapper : PlatformInterface {
     override fun clearDNSCache() {
     }
 
+    // Every method here is invoked from a Go-owned thread through JNI. The
+    // generated bridge only collects a Java exception for methods that return
+    // `error`; for the rest an uncaught throwable stays PENDING on that thread
+    // forever. From then on each `Seq.incRefnum` the bridge issues before a
+    // callback is silently skipped by JNI while the matching `decRef` still
+    // runs, so the refcount of this very object drains to zero and the next
+    // callback aborts the process with "Unknown reference: 42". Never let a
+    // throwable escape - return a harmless value instead.
     override fun readWIFIState(): WIFIState? {
-        @Suppress("DEPRECATION")
-        val wifiInfo =
-            Application.wifiManager.connectionInfo ?: return null
-        var ssid = wifiInfo.ssid
-        if (ssid == "<unknown ssid>") {
-            return WIFIState("", "")
+        return try {
+            @Suppress("DEPRECATION")
+            val wifiInfo =
+                Application.wifiManager.connectionInfo ?: return null
+            var ssid = wifiInfo.ssid ?: return WIFIState("", "")
+            if (ssid == "<unknown ssid>") {
+                return WIFIState("", "")
+            }
+            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                ssid = ssid.substring(1, ssid.length - 1)
+            }
+            WIFIState(ssid, wifiInfo.bssid ?: "")
+        } catch (e: Throwable) {
+            Log.w("PlatformInterface", "readWIFIState failed", e)
+            null
         }
-        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-            ssid = ssid.substring(1, ssid.length - 1)
-        }
-        return WIFIState(ssid, wifiInfo.bssid)
     }
 
     override fun localDNSTransport(): LocalDNSTransport? = LocalResolver
@@ -166,16 +207,20 @@ interface PlatformInterfaceWrapper : PlatformInterface {
     @OptIn(ExperimentalEncodingApi::class)
     override fun systemCertificates(): StringIterator {
         val certificates = mutableListOf<String>()
-        val keyStore = KeyStore.getInstance("AndroidCAStore")
-        if (keyStore != null) {
-            keyStore.load(null, null)
-            val aliases = keyStore.aliases()
-            while (aliases.hasMoreElements()) {
-                val cert = keyStore.getCertificate(aliases.nextElement())
-                certificates.add(
-                    "-----BEGIN CERTIFICATE-----\n" + Base64.encode(cert.encoded) + "\n-----END CERTIFICATE-----",
-                )
+        try {
+            val keyStore = KeyStore.getInstance("AndroidCAStore")
+            if (keyStore != null) {
+                keyStore.load(null, null)
+                val aliases = keyStore.aliases()
+                while (aliases.hasMoreElements()) {
+                    val cert = keyStore.getCertificate(aliases.nextElement()) ?: continue
+                    certificates.add(
+                        "-----BEGIN CERTIFICATE-----\n" + Base64.encode(cert.encoded) + "\n-----END CERTIFICATE-----",
+                    )
+                }
             }
+        } catch (e: Throwable) {
+            Log.w("PlatformInterface", "systemCertificates failed", e)
         }
         return StringArray(certificates.iterator())
     }
