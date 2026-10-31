@@ -22,17 +22,9 @@ import java.net.NetworkInterface
 import java.util.Enumeration
 import com.hiddify.core.libbox.NetworkInterface as LibboxNetworkInterface
 
-
-
 import android.system.OsConstants
 import com.hiddify.core.libbox.ConnectionOwner
-import com.hiddify.core.libbox.AutoRedirectHandler
-import com.hiddify.core.libbox.AutoRedirectSession
-import com.hiddify.core.libbox.BridgeOptions
-import com.hiddify.core.libbox.BridgeSession
 import com.hiddify.core.libbox.NeighborUpdateListener
-import com.hiddify.core.libbox.PlatformUser
-import com.hiddify.core.libbox.ShellSession
 import com.hiddify.core.libbox.LocalDNSTransport
 import java.security.KeyStore
 import kotlin.io.encoding.Base64
@@ -189,53 +181,6 @@ interface PlatformInterfaceWrapper : PlatformInterface {
     }
 
     override fun registerMyInterface(name: String?) {
-    }
-
-    override fun usePlatformShell(): Boolean = false
-
-    override fun checkPlatformShell() {
-        error("platform shell not supported")
-    }
-
-    override fun openShellSession(
-        user: PlatformUser?,
-        command: String?,
-        environ: StringIterator?,
-        term: String?,
-        rows: Int,
-        cols: Int,
-    ): ShellSession {
-        error("platform shell not supported")
-    }
-
-    override fun lookupUser(username: String?): PlatformUser {
-        error("platform shell not supported")
-    }
-
-    override fun lookupSFTPServer(): String {
-        error("not supported")
-    }
-
-    override fun readSystemSSHHostKey(): String {
-        error("not supported")
-    }
-
-    override fun tailscaleHostname(): String = android.provider.Settings.Global.getString(
-        Application.application.contentResolver,
-        android.provider.Settings.Global.DEVICE_NAME,
-    )?.takeIf { it.isNotBlank() }
-        ?: "${Build.MANUFACTURER} ${Build.MODEL}"
-
-    override fun usePlatformBridge(): Boolean = false
-
-    override fun createBridge(options: BridgeOptions?): BridgeSession {
-        error("platform bridge not supported")
-    }
-
-    override fun usePlatformAutoRedirect(): Boolean = false
-
-    override fun createAutoRedirect(options: ByteArray?, handler: AutoRedirectHandler?): AutoRedirectSession {
-        error("platform auto redirect not supported")
     }
 
     private class InterfaceArray(private val iterator: Iterator<LibboxNetworkInterface>) : NetworkInterfaceIterator {

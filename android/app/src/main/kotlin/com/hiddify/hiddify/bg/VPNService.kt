@@ -220,9 +220,13 @@ class VPNService : VpnService(), PlatformInterfaceWrapper {
 
 //    override fun writeLog(message: String) = service.writeLog(message)
 
+    override fun useProcFS(): Boolean = false
+
     override fun sendNotification(notification: Notification) {
 //        service.sendNotification(notification)
     }
 
-    override fun cancelNotification(identifier: String, typeID: Int) = service.cancelNotification(identifier, typeID)
+    // libbox (feat/hydra base) no longer declares cancelNotification; the
+    // callback is gone upstream — keep the local helper name out of override.
+    fun cancelNotification(identifier: String, typeID: Int) { service.cancelNotification(identifier, typeID) }
 }

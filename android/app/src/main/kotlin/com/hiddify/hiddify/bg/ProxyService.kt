@@ -13,9 +13,11 @@ class ProxyService :
 
     override fun onBind(intent: Intent) = service.onBind(intent)
 
+    override fun useProcFS(): Boolean = false
+
     override fun onDestroy() = service.onDestroy()
 
     override fun sendNotification(notification: Notification) = service.sendNotification(notification)
 
-    override fun cancelNotification(identifier: String, typeID: Int) = service.cancelNotification(identifier, typeID)
+    fun cancelNotification(identifier: String, typeID: Int) = service.cancelNotification(identifier, typeID)
 }
