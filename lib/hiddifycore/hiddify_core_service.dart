@@ -9,6 +9,8 @@ import 'package:hiddify/core/model/directories.dart';
 import 'package:hiddify/core/notification/in_app_notification_controller.dart';
 import 'package:hiddify/core/preferences/general_preferences.dart';
 import 'package:hiddify/features/connection/model/connection_failure.dart';
+import 'package:hiddify/features/log/data/box_log_trimmer.dart';
+import 'package:hiddify/features/log/data/log_data_providers.dart';
 import 'package:hiddify/features/settings/data/config_option_repository.dart';
 import 'package:hiddify/hiddifycore/core_interface/core_interface.dart';
 import 'package:hiddify/hiddifycore/generated/v2/hcommon/common.pb.dart';
@@ -42,6 +44,7 @@ class HiddifyCoreService with InfraLogger {
   final CallOptions? grpcOptions = null; //CallOptions(timeout: const Duration(milliseconds: 10000));
   final Map<String, StreamSubscription?> subscriptions = {};
   List<OutboundGroup> latest = [];
+  BoxLogTrimmer? _logTrimmer;
 
   Future<void> init() async {
     await setup()
@@ -104,6 +107,10 @@ class HiddifyCoreService with InfraLogger {
         }
         statusController.add(currentState);
         await startListeningStatus("bg", core.bgClient);
+        // keep box.log bounded: libbox appends without limit while the core
+        // runs; the trimmer owns the file for the whole service lifetime
+        _logTrimmer ??= BoxLogTrimmer(path: ref.read(logPathResolverProvider).coreFile().path);
+        _logTrimmer!.start();
         // ref.read(coreRestartSignalProvider.notifier).restart();
         return right(unit);
       } catch (e) {
