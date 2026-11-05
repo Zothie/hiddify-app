@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -112,6 +113,28 @@ class DioHttpClient with InfraLogger {
     ({String username, String password})? credentials,
     bool proxyOnly = false,
   }) async {
+    // DIRECT first: subscriptions are usually hosted on hosts the machine
+    // reaches directly (RU-hosted lanes, LAN gateways), and in VPN mode the
+    // proxied path can stall the request past the timeout (relay-IP routing
+    // makes the core park such dials on a far exit). A short direct budget,
+    // then the proxy-aware modes — a hanging proxy must never break the fetch.
+    if (!proxyOnly) {
+      try {
+        return await _dio["direct"]!.download(
+          url,
+          path,
+          cancelToken: cancelToken,
+          options: _options(url, userAgent: userAgent, credentials: credentials),
+        ).timeout(const Duration(seconds: 8));
+      } on TimeoutException {
+        // fall through to the proxy-aware modes
+      } on DioException catch (err) {
+        final recoverable = err.type == DioExceptionType.connectionTimeout ||
+            err.type == DioExceptionType.receiveTimeout ||
+            err.type == DioExceptionType.connectionError;
+        if (!recoverable) rethrow;
+      }
+    }
     final mode = proxyOnly
         ? "proxy"
         : await isPortOpen("127.0.0.1", port)
