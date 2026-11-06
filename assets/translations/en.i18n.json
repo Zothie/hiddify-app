@@ -124,6 +124,15 @@
         "result": "Delay: ${delay}ms",
         "timeout": "Delay test timeout",
         "testing": "Delay: testing..."
+      },
+      "adaptiveState": {
+        "connectedVerified": "Connected (verified)",
+        "connecting": "Connecting",
+        "searching": "Searching",
+        "backoff": "Backoff",
+        "needUpdate": "Needs update",
+        "closed": "Closed",
+        "offline": "Offline"
       }
     },
     "profiles": {

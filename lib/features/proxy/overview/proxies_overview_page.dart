@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hiddify/core/localization/translations.dart';
 import 'package:hiddify/core/model/failures.dart';
+import 'package:hiddify/features/proxy/overview/adaptive_state_chip.dart';
 import 'package:hiddify/features/proxy/overview/proxies_overview_notifier.dart';
 import 'package:hiddify/features/proxy/widget/proxy_tile.dart';
 import 'package:hiddify/utils/utils.dart';
@@ -47,32 +48,39 @@ class ProxiesOverviewPage extends HookConsumerWidget with PresLogger {
       ),
       body: proxies.when(
         data: (group) => group != null
-            ? LayoutBuilder(
-                builder: (context, constraints) {
-                  final width = constraints.maxWidth;
-                  final crossAxisCount = PlatformUtils.isMobile && width < 600 ? 1 : max(1, (width / 268).floor());
-                  return GridView.builder(
-                    padding: const EdgeInsets.only(bottom: 86),
-                    itemCount: group.items.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      mainAxisExtent: 72,
+            ? Column(
+                children: [
+                  AdaptiveStateChip(tag: group.selected),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final width = constraints.maxWidth;
+                        final crossAxisCount = PlatformUtils.isMobile && width < 600 ? 1 : max(1, (width / 268).floor());
+                        return GridView.builder(
+                          padding: const EdgeInsets.only(bottom: 86),
+                          itemCount: group.items.length,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            mainAxisExtent: 72,
+                          ),
+                          itemBuilder: (context, index) {
+                            final proxy = group.items[index];
+                            return ProxyTile(
+                              proxy,
+                              selected: group.selected == proxy.tag,
+                              onTap: () async {
+                                await ref.read(proxiesOverviewNotifierProvider.notifier).changeProxy(group.tag, proxy.tag);
+                                // if (selectActiveProxyMutation.state.isInProgress) return;
+                                // selectActiveProxyMutation.setFuture(
+                                // );
+                              },
+                            );
+                          },
+                        );
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      final proxy = group.items[index];
-                      return ProxyTile(
-                        proxy,
-                        selected: group.selected == proxy.tag,
-                        onTap: () async {
-                          await ref.read(proxiesOverviewNotifierProvider.notifier).changeProxy(group.tag, proxy.tag);
-                          // if (selectActiveProxyMutation.state.isInProgress) return;
-                          // selectActiveProxyMutation.setFuture(
-                          // );
-                        },
-                      );
-                    },
-                  );
-                },
+                  ),
+                ],
               )
             : Center(child: Text(t.pages.proxies.empty)),
         error: (error, stackTrace) => Center(child: Text(t.presentShortError(error))),
