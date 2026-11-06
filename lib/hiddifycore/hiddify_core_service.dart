@@ -594,4 +594,18 @@ class HiddifyCoreService with InfraLogger {
       }
     });
   }
+
+  /// Reads the hydra adaptive coordinator state for the outbound [tag].
+  ///
+  /// The core answers state "unknown" when no adaptive outbound is
+  /// registered under [tag]; "active", "connecting" or "closed" otherwise.
+  Future<GetAdaptiveStateResponse> adaptiveState(String tag) async {
+    loggy.debug("getting adaptive state");
+    try {
+      return await core.bgClient.getAdaptiveState(GetAdaptiveStateRequest(tag: tag));
+    } catch (e) {
+      loggy.error("error getting adaptive state: $e");
+      rethrow;
+    }
+  }
 }
