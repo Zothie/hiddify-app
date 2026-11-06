@@ -721,3 +721,36 @@ const LANIPResponse$json = {
 /// Descriptor for `LANIPResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List lANIPResponseDescriptor =
     $convert.base64Decode('Cg1MQU5JUFJlc3BvbnNlEg4KAmlwGAEgASgJUgJpcA==');
+
+@$core.Deprecated('Use getAdaptiveStateRequestDescriptor instead')
+const GetAdaptiveStateRequest$json = {
+  '1': 'GetAdaptiveStateRequest',
+  '2': [
+    {'1': 'tag', '3': 1, '4': 1, '5': 9, '10': 'tag'},
+  ],
+};
+
+/// Descriptor for `GetAdaptiveStateRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getAdaptiveStateRequestDescriptor =
+    $convert.base64Decode(
+        'ChdHZXRBZGFwdGl2ZVN0YXRlUmVxdWVzdBIQCgN0YWcYASABKAlSA3RhZw==');
+
+@$core.Deprecated('Use getAdaptiveStateResponseDescriptor instead')
+const GetAdaptiveStateResponse$json = {
+  '1': 'GetAdaptiveStateResponse',
+  '2': [
+    {'1': 'state', '3': 1, '4': 1, '5': 9, '10': 'state'},
+    {'1': 'active_id', '3': 2, '4': 1, '5': 9, '10': 'activeId'},
+    {'1': 'last_good', '3': 3, '4': 1, '5': 9, '10': 'lastGood'},
+    {'1': 'attempts', '3': 4, '4': 1, '5': 4, '10': 'attempts'},
+    {'1': 'generation', '3': 5, '4': 1, '5': 4, '10': 'generation'},
+    {'1': 'closed', '3': 6, '4': 1, '5': 8, '10': 'closed'},
+  ],
+};
+
+/// Descriptor for `GetAdaptiveStateResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getAdaptiveStateResponseDescriptor = $convert.base64Decode(
+    'ChhHZXRBZGFwdGl2ZVN0YXRlUmVzcG9uc2USFAoFc3RhdGUYASABKAlSBXN0YXRlEhsKCWFjdG'
+    'l2ZV9pZBgCIAEoCVIIYWN0aXZlSWQSGwoJbGFzdF9nb29kGAMgASgJUghsYXN0R29vZBIaCghh'
+    'dHRlbXB0cxgEIAEoBFIIYXR0ZW1wdHMSHgoKZ2VuZXJhdGlvbhgFIAEoBFIKZ2VuZXJhdGlvbh'
+    'IWCgZjbG9zZWQYBiABKAhSBmNsb3NlZA==');

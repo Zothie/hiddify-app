@@ -37,11 +37,22 @@ class CoreInterfaceMobile extends CoreInterface with InfraLogger {
   late LastStream<CoreStatus> _status;
   @override
   Future<String> setup(Directories directories, bool debug, int mode) async {
-    final channelOption = [1, 2].contains(mode)
-        ? MTLSChannelCredentials(serverPublicKey: serverPublicKey, clientKey: cert)
-        : const ChannelCredentials.insecure();
     _debug = debug;
-    final helloClient = HelloClient(
+    // The core's front gRPC server (port 17078) may speak TLS with a
+    // self-signed "CN=Hiddify" certificate generated Go-side (stored in
+    // AppSettings.db). A plaintext channel can never handshake with it: hello
+    // used to fail or hang forever (no deadline), leaving main() suspended
+    // before runApp() - permanent splash.
+    //
+    // Strategy: probe with plaintext first; only when plaintext fails (a TLS
+    // server is running - which also guarantees the Go certificate pair is
+    // initialized) fetch the server certificate via the method channel and
+    // retry with an authenticated channel. Never call get_grpc_server_public_key
+    // earlier: when no TLS server was started yet, Go's certpair is nil and
+    // GetServerPublicKey panics (SIGABRT kills the process).
+    final insecureOption = const ChannelCredentials.insecure();
+    ChannelCredentials channelOption = insecureOption;
+    HelloClient helloClient = HelloClient(
       ClientChannel(
         '127.0.0.1',
         port: portFront,
@@ -53,21 +64,57 @@ class CoreInterfaceMobile extends CoreInterface with InfraLogger {
 
     _status = LastStream(ValueConnectableStream(Rx.merge([status, alerts])).autoConnect());
     try {
-      await helloClient.sayHello(HelloRequest(name: "test"));
-      loggy.info("core is already started!");
+      await helloClient.sayHello(HelloRequest(name: "test")).timeout(const Duration(seconds: 8));
+      loggy.info("core is already started (insecure)!");
     } catch (e) {
-      //core is not started yet
-
-      await methodChannel.invokeMethod("setup", {
-        "baseDir": directories.baseDir.path,
-        "workingDir": directories.workingDir.path,
-        "tempDir": directories.tempDir.path,
-        "grpcPort": portFront,
-        "mode": mode,
-        "debug": debug,
-      });
-      final res = await helloClient.sayHello(HelloRequest(name: "test"));
-      loggy.info(res.toString());
+      //core is not started yet (or it is a TLS server rejecting plaintext)
+      loggy.info("insecure hello failed, requesting core setup: $e");
+      try {
+        await methodChannel.invokeMethod("setup", {
+          "baseDir": directories.baseDir.path,
+          "workingDir": directories.workingDir.path,
+          "tempDir": directories.tempDir.path,
+          "grpcPort": portFront,
+          "mode": mode,
+          "debug": debug,
+        });
+      } catch (setupError) {
+        // The Android service side may have already started the core and owns
+        // the port; Setup() then fails (e.g. EADDRINUSE) while the running
+        // server is perfectly usable. Log and retry hello below.
+        loggy.warning("core setup failed (core may already be running): $setupError");
+      }
+      try {
+        final res = await helloClient.sayHello(HelloRequest(name: "test")).timeout(const Duration(seconds: 8));
+        loggy.info(res.toString());
+      } catch (plainError) {
+        // Plaintext still failing: the running server is TLS. Fetch its
+        // certificate (safe now - a TLS server implies the Go certpair is
+        // initialized) and retry with mutual-TLS credentials.
+        loggy.warning("plaintext hello failed, trying mTLS: $plainError");
+        try {
+          serverPublicKey =
+              await methodChannel.invokeMethod<Uint8List>("get_grpc_server_public_key") ?? Uint8List.fromList([]);
+        } catch (keyError) {
+          loggy.warning("get_grpc_server_public_key failed: $keyError");
+          serverPublicKey = Uint8List.fromList([]);
+        }
+        final serverPem = String.fromCharCodes(serverPublicKey);
+        if (serverPem.contains("-----BEGIN CERTIFICATE-----")) {
+          channelOption = MTLSChannelCredentials(serverPublicKey: serverPublicKey, clientKey: cert);
+        } else {
+          loggy.warning("no server certificate available, staying insecure");
+        }
+        final tlsHello = HelloClient(
+          ClientChannel(
+            '127.0.0.1',
+            port: portFront,
+            options: ChannelOptions(credentials: channelOption),
+          ),
+        );
+        final res = await tlsHello.sayHello(HelloRequest(name: "test")).timeout(const Duration(seconds: 8));
+        loggy.info(res.toString());
+      }
     }
 
     // serverPublicKey = await methodChannel.invokeMethod<Uint8List>("get_grpc_server_public_key") ?? Uint8List.fromList([]);

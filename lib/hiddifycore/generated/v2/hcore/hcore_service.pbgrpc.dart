@@ -191,6 +191,13 @@ class CoreClient extends $grpc.Client {
     return $createUnaryCall(_$getLANIP, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.GetAdaptiveStateResponse> getAdaptiveState(
+    $0.GetAdaptiveStateRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getAdaptiveState, request, options: options);
+  }
+
   // method descriptors
 
   static final _$start =
@@ -289,6 +296,11 @@ class CoreClient extends $grpc.Client {
       '/hcore.Core/GetLANIP',
       ($1.Empty value) => value.writeToBuffer(),
       $0.LANIPResponse.fromBuffer);
+  static final _$getAdaptiveState = $grpc.ClientMethod<
+          $0.GetAdaptiveStateRequest, $0.GetAdaptiveStateResponse>(
+      '/hcore.Core/GetAdaptiveState',
+      ($0.GetAdaptiveStateRequest value) => value.writeToBuffer(),
+      $0.GetAdaptiveStateResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hcore.Core')
@@ -450,6 +462,15 @@ abstract class CoreServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $1.Empty.fromBuffer(value),
         ($0.LANIPResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetAdaptiveStateRequest,
+            $0.GetAdaptiveStateResponse>(
+        'GetAdaptiveState',
+        getAdaptiveState_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.GetAdaptiveStateRequest.fromBuffer(value),
+        ($0.GetAdaptiveStateResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.CoreInfoResponse> start_Pre(
@@ -621,4 +642,13 @@ abstract class CoreServiceBase extends $grpc.Service {
 
   $async.Future<$0.LANIPResponse> getLANIP(
       $grpc.ServiceCall call, $1.Empty request);
+
+  $async.Future<$0.GetAdaptiveStateResponse> getAdaptiveState_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetAdaptiveStateRequest> $request) async {
+    return getAdaptiveState($call, await $request);
+  }
+
+  $async.Future<$0.GetAdaptiveStateResponse> getAdaptiveState(
+      $grpc.ServiceCall call, $0.GetAdaptiveStateRequest request);
 }

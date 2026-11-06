@@ -2395,6 +2395,184 @@ class LANIPResponse extends $pb.GeneratedMessage {
   void clearIp() => $_clearField(1);
 }
 
+class GetAdaptiveStateRequest extends $pb.GeneratedMessage {
+  factory GetAdaptiveStateRequest({
+    $core.String? tag,
+  }) {
+    final result = create();
+    if (tag != null) result.tag = tag;
+    return result;
+  }
+
+  GetAdaptiveStateRequest._();
+
+  factory GetAdaptiveStateRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetAdaptiveStateRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetAdaptiveStateRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hcore'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'tag')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAdaptiveStateRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAdaptiveStateRequest copyWith(
+          void Function(GetAdaptiveStateRequest) updates) =>
+      super.copyWith((message) => updates(message as GetAdaptiveStateRequest))
+          as GetAdaptiveStateRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetAdaptiveStateRequest create() => GetAdaptiveStateRequest._();
+  @$core.override
+  GetAdaptiveStateRequest createEmptyInstance() => create();
+  static $pb.PbList<GetAdaptiveStateRequest> createRepeated() =>
+      $pb.PbList<GetAdaptiveStateRequest>();
+  @$core.pragma('dart2js:noInline')
+  static GetAdaptiveStateRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAdaptiveStateRequest>(create);
+  static GetAdaptiveStateRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get tag => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set tag($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTag() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTag() => $_clearField(1);
+}
+
+class GetAdaptiveStateResponse extends $pb.GeneratedMessage {
+  factory GetAdaptiveStateResponse({
+    $core.String? state,
+    $core.String? activeId,
+    $core.String? lastGood,
+    $fixnum.Int64? attempts,
+    $fixnum.Int64? generation,
+    $core.bool? closed,
+  }) {
+    final result = create();
+    if (state != null) result.state = state;
+    if (activeId != null) result.activeId = activeId;
+    if (lastGood != null) result.lastGood = lastGood;
+    if (attempts != null) result.attempts = attempts;
+    if (generation != null) result.generation = generation;
+    if (closed != null) result.closed = closed;
+    return result;
+  }
+
+  GetAdaptiveStateResponse._();
+
+  factory GetAdaptiveStateResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetAdaptiveStateResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetAdaptiveStateResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hcore'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'state')
+    ..aOS(2, _omitFieldNames ? '' : 'activeId')
+    ..aOS(3, _omitFieldNames ? '' : 'lastGood')
+    ..a<$fixnum.Int64>(
+        4, _omitFieldNames ? '' : 'attempts', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'generation', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(6, _omitFieldNames ? '' : 'closed')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAdaptiveStateResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetAdaptiveStateResponse copyWith(
+          void Function(GetAdaptiveStateResponse) updates) =>
+      super.copyWith((message) => updates(message as GetAdaptiveStateResponse))
+          as GetAdaptiveStateResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetAdaptiveStateResponse create() => GetAdaptiveStateResponse._();
+  @$core.override
+  GetAdaptiveStateResponse createEmptyInstance() => create();
+  static $pb.PbList<GetAdaptiveStateResponse> createRepeated() =>
+      $pb.PbList<GetAdaptiveStateResponse>();
+  @$core.pragma('dart2js:noInline')
+  static GetAdaptiveStateResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetAdaptiveStateResponse>(create);
+  static GetAdaptiveStateResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get state => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set state($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get activeId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set activeId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasActiveId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearActiveId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get lastGood => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set lastGood($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLastGood() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLastGood() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get attempts => $_getI64(3);
+  @$pb.TagNumber(4)
+  set attempts($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAttempts() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAttempts() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get generation => $_getI64(4);
+  @$pb.TagNumber(5)
+  set generation($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasGeneration() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearGeneration() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get closed => $_getBF(5);
+  @$pb.TagNumber(6)
+  set closed($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasClosed() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearClosed() => $_clearField(6);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
