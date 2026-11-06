@@ -35,6 +35,7 @@ interface PlatformInterfaceWrapper : PlatformInterface {
     override fun usePlatformAutoDetectInterfaceControl(): Boolean = true
 
     override fun autoDetectInterfaceControl(fd: Int) {
+        throw java.io.IOException("Required platform socket protection is not implemented")
     }
 
     override fun openTun(options: TunOptions): Int {

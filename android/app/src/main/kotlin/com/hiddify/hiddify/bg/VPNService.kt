@@ -49,7 +49,9 @@ class VPNService : VpnService(), PlatformInterfaceWrapper {
     }
 
     override fun autoDetectInterfaceControl(fd: Int) {
-        protect(fd)
+        if (!protect(fd)) {
+            throw java.io.IOException("Android VPN socket protection failed")
+        }
     }
 
     var systemProxyAvailable = false
