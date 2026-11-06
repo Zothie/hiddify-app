@@ -348,6 +348,13 @@
           "perAppProxy": {
             "title": "Per-app proxy",
             "hideSysApps": "Hide system apps",
+            "presets": {
+              "title": "Don't tunnel presets",
+              "includeModeHint": "Presets work only in Bypass mode",
+              "steam": "Steam remote play",
+              "radmin": "Radmin VPN",
+              "gamePorts": "Game server ports"
+            },
             "options": {
               "import": {
                 "clipboard": "Import selection from clipboard",

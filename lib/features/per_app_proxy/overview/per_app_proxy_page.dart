@@ -14,6 +14,7 @@ import 'package:hiddify/features/per_app_proxy/model/per_app_proxy_mode.dart';
 import 'package:hiddify/features/per_app_proxy/model/pkg_flag.dart';
 import 'package:hiddify/features/per_app_proxy/overview/per_app_proxy_loading_notifier.dart';
 import 'package:hiddify/features/per_app_proxy/overview/per_app_proxy_notifier.dart';
+import 'package:hiddify/features/per_app_proxy/overview/tunnel_presets_section.dart';
 import 'package:hiddify/features/settings/data/config_option_repository.dart';
 import 'package:hiddify/utils/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -299,40 +300,47 @@ class PerAppProxyPage extends HookConsumerWidget with PresLogger {
             )
           : null,
       body: displayedApps.when(
-        data: (packages) => ListView.builder(
-          padding: const EdgeInsets.only(bottom: 88),
-          controller: scrollController,
-          itemBuilder: (context, index) {
-            final package = packages[index];
-            final flag = selectedApps.requireValue[package.packageName];
-            return CheckboxListTile.adaptive(
-              title: Row(
-                children: [
-                  Flexible(child: Text(package.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
-                  if (flag != null && PkgFlag.forceDeselection.check(flag)) ...[
-                    const Gap(6),
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(color: theme.colorScheme.error, shape: BoxShape.circle),
+        data: (packages) => Column(
+          children: [
+            const TunnelPresetsSection(),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 88),
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  final package = packages[index];
+                  final flag = selectedApps.requireValue[package.packageName];
+                  return CheckboxListTile.adaptive(
+                    title: Row(
+                      children: [
+                        Flexible(child: Text(package.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                        if (flag != null && PkgFlag.forceDeselection.check(flag)) ...[
+                          const Gap(6),
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(color: theme.colorScheme.error, shape: BoxShape.circle),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                ],
+                    subtitle: Text(
+                      package.packageName,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                    value: flag == null ? false : PkgFlag.checkboxValue(flag),
+                    tristate: true,
+                    onChanged: (_) => ref.read(PerAppProxyProvider(mode).notifier).updatePkg(package.packageName),
+                    secondary: package.icon == null
+                        ? null
+                        : Image.memory(package.icon!, width: 48, height: 48, cacheWidth: 48, cacheHeight: 48),
+                  );
+                },
+                itemCount: packages.length,
               ),
-              subtitle: Text(
-                package.packageName,
-                style: Theme.of(context).textTheme.bodySmall,
-                maxLines: 1, overflow: TextOverflow.ellipsis,
-              ),
-              value: flag == null ? false : PkgFlag.checkboxValue(flag),
-              tristate: true,
-              onChanged: (_) => ref.read(PerAppProxyProvider(mode).notifier).updatePkg(package.packageName),
-              secondary: package.icon == null
-                  ? null
-                  : Image.memory(package.icon!, width: 48, height: 48, cacheWidth: 48, cacheHeight: 48),
-            );
-          },
-          itemCount: packages.length,
+            ),
+          ],
         ),
         error: (error, _) => SliverErrorBodyPlaceholder(error.toString()),
         loading: () => const Center(child: CircularProgressIndicator()),

@@ -116,6 +116,15 @@ abstract class Preferences {
   static final psiphonConsentGiven = PreferencesNotifier.create<bool, bool>("psiphon-consent-given", false);
 
   static final showRouteGeneralOptions = PreferencesNotifier.create<bool, bool>("show-route-general-options", true);
+
+  // "Don't tunnel" preset toggles (see features/per_app_proxy/model/tunnel_presets.dart).
+  // Steam/Radmin affect the exclude list and (desktop) process rules; gamePorts
+  // drives the core's direct-game-ports flag.
+  static final tunnelPresetSteam = PreferencesNotifier.create<bool, bool>("tunnel-preset-steam", false);
+
+  static final tunnelPresetRadmin = PreferencesNotifier.create<bool, bool>("tunnel-preset-radmin", false);
+
+  static final tunnelPresetGamePorts = PreferencesNotifier.create<bool, bool>("tunnel-preset-game-ports", false);
 }
 
 @Riverpod(keepAlive: true)

@@ -2,10 +2,12 @@ import 'package:dartx/dartx.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hiddify/core/model/optional_range.dart';
 import 'package:hiddify/core/model/region.dart';
+import 'package:hiddify/core/preferences/general_preferences.dart';
 import 'package:hiddify/core/utils/exception_handler.dart';
 import 'package:hiddify/core/utils/json_converters.dart';
 import 'package:hiddify/core/utils/preferences_utils.dart';
 import 'package:hiddify/features/log/model/log_level.dart';
+import 'package:hiddify/features/per_app_proxy/model/tunnel_presets.dart';
 import 'package:hiddify/features/profile/data/profile_parser.dart';
 import 'package:hiddify/features/route_rules/notifier/rules_notifier.dart';
 import 'package:hiddify/features/settings/model/config_option_failure.dart';
@@ -499,6 +501,19 @@ abstract class ConfigOptions {
       setSystemProxy: mode == ServiceMode.systemProxy,
       // bypassLan: ref.watch(bypassLan),
       allowConnectionFromLan: ref.watch(allowConnectionFromLan),
+      // "Don't tunnel" presets. Game ports work on every platform (the rules
+      // live in sing-box route rules); process names are a desktop-only
+      // mechanism — Android routes packages via the VPNService exclude list.
+      directGamePorts: ref.watch(Preferences.tunnelPresetGamePorts),
+      directProcessNames: PlatformUtils.isDesktop
+          ? presetDesktopProcessNames(
+              activeTunnelPresets(
+                steam: ref.watch(Preferences.tunnelPresetSteam),
+                radmin: ref.watch(Preferences.tunnelPresetRadmin),
+                gamePorts: false,
+              ),
+            )
+          : const <String>[],
       lanSharingPassword: ref.watch(lanSharingPassword),
       enableFakeDns: ref.watch(enableFakeDns),
       // enableDnsRouting: ref.watch(enableDnsRouting),

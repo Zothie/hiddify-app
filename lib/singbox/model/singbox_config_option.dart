@@ -47,6 +47,11 @@ class SingboxConfigOption with _$SingboxConfigOption {
     required bool setSystemProxy,
     // required bool bypassLan,
     required bool allowConnectionFromLan,
+    // Game-server port bypass: hiddify-core injects the Steam classic port
+    // rules (UDP 27000:27100, UDP 4380, TCP 27015 -> direct) when true.
+    required bool directGamePorts,
+    // Desktop process names routed via sing-box process_name rules -> direct.
+    required List<String> directProcessNames,
     required String lanSharingPassword,
     required bool enableFakeDns,
     // required bool enableDnsRouting,
