@@ -2460,6 +2460,23 @@ class GetAdaptiveStateResponse extends $pb.GeneratedMessage {
     $fixnum.Int64? attempts,
     $fixnum.Int64? generation,
     $core.bool? closed,
+    $fixnum.Int64? uniqueCandidatesTried,
+    $fixnum.Int64? totalAttempts,
+    $fixnum.Int64? searchElapsedMs,
+    $fixnum.Int64? lastSearchElapsedMs,
+    $core.bool? searchInProgress,
+    $core.bool? stateLoaded,
+    $core.bool? stateSaved,
+    $core.String? stateError,
+    $core.bool? blackout,
+    $core.String? blackoutReason,
+    $core.int? coveragePercent,
+    $core.int? coverageTarget,
+    $core.Iterable<$core.MapEntry<$core.String, $fixnum.Int64>>? perCandidate,
+    $core.bool? dpiGateEnabled,
+    $core.String? dpiGateReason,
+    $core.int? candidateCount,
+    $fixnum.Int64? swapGeneration,
   }) {
     final result = create();
     if (state != null) result.state = state;
@@ -2468,6 +2485,25 @@ class GetAdaptiveStateResponse extends $pb.GeneratedMessage {
     if (attempts != null) result.attempts = attempts;
     if (generation != null) result.generation = generation;
     if (closed != null) result.closed = closed;
+    if (uniqueCandidatesTried != null)
+      result.uniqueCandidatesTried = uniqueCandidatesTried;
+    if (totalAttempts != null) result.totalAttempts = totalAttempts;
+    if (searchElapsedMs != null) result.searchElapsedMs = searchElapsedMs;
+    if (lastSearchElapsedMs != null)
+      result.lastSearchElapsedMs = lastSearchElapsedMs;
+    if (searchInProgress != null) result.searchInProgress = searchInProgress;
+    if (stateLoaded != null) result.stateLoaded = stateLoaded;
+    if (stateSaved != null) result.stateSaved = stateSaved;
+    if (stateError != null) result.stateError = stateError;
+    if (blackout != null) result.blackout = blackout;
+    if (blackoutReason != null) result.blackoutReason = blackoutReason;
+    if (coveragePercent != null) result.coveragePercent = coveragePercent;
+    if (coverageTarget != null) result.coverageTarget = coverageTarget;
+    if (perCandidate != null) result.perCandidate.addEntries(perCandidate);
+    if (dpiGateEnabled != null) result.dpiGateEnabled = dpiGateEnabled;
+    if (dpiGateReason != null) result.dpiGateReason = dpiGateReason;
+    if (candidateCount != null) result.candidateCount = candidateCount;
+    if (swapGeneration != null) result.swapGeneration = swapGeneration;
     return result;
   }
 
@@ -2494,6 +2530,37 @@ class GetAdaptiveStateResponse extends $pb.GeneratedMessage {
         5, _omitFieldNames ? '' : 'generation', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOB(6, _omitFieldNames ? '' : 'closed')
+    ..a<$fixnum.Int64>(
+        7, _omitFieldNames ? '' : 'uniqueCandidatesTried', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        8, _omitFieldNames ? '' : 'totalAttempts', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        9, _omitFieldNames ? '' : 'searchElapsedMs', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        10, _omitFieldNames ? '' : 'lastSearchElapsedMs', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(11, _omitFieldNames ? '' : 'searchInProgress')
+    ..aOB(12, _omitFieldNames ? '' : 'stateLoaded')
+    ..aOB(13, _omitFieldNames ? '' : 'stateSaved')
+    ..aOS(14, _omitFieldNames ? '' : 'stateError')
+    ..aOB(15, _omitFieldNames ? '' : 'blackout')
+    ..aOS(16, _omitFieldNames ? '' : 'blackoutReason')
+    ..aI(17, _omitFieldNames ? '' : 'coveragePercent')
+    ..aI(18, _omitFieldNames ? '' : 'coverageTarget')
+    ..m<$core.String, $fixnum.Int64>(19, _omitFieldNames ? '' : 'perCandidate',
+        entryClassName: 'GetAdaptiveStateResponse.PerCandidateEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OU6,
+        packageName: const $pb.PackageName('hcore'))
+    ..aOB(20, _omitFieldNames ? '' : 'dpiGateEnabled')
+    ..aOS(21, _omitFieldNames ? '' : 'dpiGateReason')
+    ..aI(22, _omitFieldNames ? '' : 'candidateCount')
+    ..a<$fixnum.Int64>(
+        23, _omitFieldNames ? '' : 'swapGeneration', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2571,6 +2638,160 @@ class GetAdaptiveStateResponse extends $pb.GeneratedMessage {
   $core.bool hasClosed() => $_has(5);
   @$pb.TagNumber(6)
   void clearClosed() => $_clearField(6);
+
+  /// Full adaptive search snapshot (audit gaps G1+G7).
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get uniqueCandidatesTried => $_getI64(6);
+  @$pb.TagNumber(7)
+  set uniqueCandidatesTried($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasUniqueCandidatesTried() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearUniqueCandidatesTried() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get totalAttempts => $_getI64(7);
+  @$pb.TagNumber(8)
+  set totalAttempts($fixnum.Int64 value) => $_setInt64(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTotalAttempts() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTotalAttempts() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get searchElapsedMs => $_getI64(8);
+  @$pb.TagNumber(9)
+  set searchElapsedMs($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasSearchElapsedMs() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearSearchElapsedMs() => $_clearField(9);
+
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get lastSearchElapsedMs => $_getI64(9);
+  @$pb.TagNumber(10)
+  set lastSearchElapsedMs($fixnum.Int64 value) => $_setInt64(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasLastSearchElapsedMs() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearLastSearchElapsedMs() => $_clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get searchInProgress => $_getBF(10);
+  @$pb.TagNumber(11)
+  set searchInProgress($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasSearchInProgress() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearSearchInProgress() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.bool get stateLoaded => $_getBF(11);
+  @$pb.TagNumber(12)
+  set stateLoaded($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasStateLoaded() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearStateLoaded() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.bool get stateSaved => $_getBF(12);
+  @$pb.TagNumber(13)
+  set stateSaved($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasStateSaved() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearStateSaved() => $_clearField(13);
+
+  @$pb.TagNumber(14)
+  $core.String get stateError => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set stateError($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasStateError() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearStateError() => $_clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.bool get blackout => $_getBF(14);
+  @$pb.TagNumber(15)
+  set blackout($core.bool value) => $_setBool(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasBlackout() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearBlackout() => $_clearField(15);
+
+  @$pb.TagNumber(16)
+  $core.String get blackoutReason => $_getSZ(15);
+  @$pb.TagNumber(16)
+  set blackoutReason($core.String value) => $_setString(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasBlackoutReason() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearBlackoutReason() => $_clearField(16);
+
+  @$pb.TagNumber(17)
+  $core.int get coveragePercent => $_getIZ(16);
+  @$pb.TagNumber(17)
+  set coveragePercent($core.int value) => $_setSignedInt32(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasCoveragePercent() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearCoveragePercent() => $_clearField(17);
+
+  @$pb.TagNumber(18)
+  $core.int get coverageTarget => $_getIZ(17);
+  @$pb.TagNumber(18)
+  set coverageTarget($core.int value) => $_setSignedInt32(17, value);
+  @$pb.TagNumber(18)
+  $core.bool hasCoverageTarget() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearCoverageTarget() => $_clearField(18);
+
+  @$pb.TagNumber(19)
+  $pb.PbMap<$core.String, $fixnum.Int64> get perCandidate => $_getMap(18);
+
+  /// Client self-check gate status, sourced from the outbound layer
+  /// (hydra dpigate.go): enabled true when the gate is live, reason
+  /// empty then, otherwise the failure that kept the gate off.
+  @$pb.TagNumber(20)
+  $core.bool get dpiGateEnabled => $_getBF(19);
+  @$pb.TagNumber(20)
+  set dpiGateEnabled($core.bool value) => $_setBool(19, value);
+  @$pb.TagNumber(20)
+  $core.bool hasDpiGateEnabled() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearDpiGateEnabled() => $_clearField(20);
+
+  @$pb.TagNumber(21)
+  $core.String get dpiGateReason => $_getSZ(20);
+  @$pb.TagNumber(21)
+  set dpiGateReason($core.String value) => $_setString(20, value);
+  @$pb.TagNumber(21)
+  $core.bool hasDpiGateReason() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearDpiGateReason() => $_clearField(21);
+
+  /// Candidate set size and hot-swap counter (G2): candidate_count is the
+  /// live set size derived at snapshot time; swap_generation increments
+  /// only on ReplaceCandidates hot-swaps and stays 0 before the first one.
+  @$pb.TagNumber(22)
+  $core.int get candidateCount => $_getIZ(21);
+  @$pb.TagNumber(22)
+  set candidateCount($core.int value) => $_setSignedInt32(21, value);
+  @$pb.TagNumber(22)
+  $core.bool hasCandidateCount() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearCandidateCount() => $_clearField(22);
+
+  @$pb.TagNumber(23)
+  $fixnum.Int64 get swapGeneration => $_getI64(22);
+  @$pb.TagNumber(23)
+  set swapGeneration($fixnum.Int64 value) => $_setInt64(22, value);
+  @$pb.TagNumber(23)
+  $core.bool hasSwapGeneration() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearSwapGeneration() => $_clearField(23);
 }
 
 const $core.bool _omitFieldNames =

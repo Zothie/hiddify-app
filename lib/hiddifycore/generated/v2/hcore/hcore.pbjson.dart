@@ -745,7 +745,60 @@ const GetAdaptiveStateResponse$json = {
     {'1': 'attempts', '3': 4, '4': 1, '5': 4, '10': 'attempts'},
     {'1': 'generation', '3': 5, '4': 1, '5': 4, '10': 'generation'},
     {'1': 'closed', '3': 6, '4': 1, '5': 8, '10': 'closed'},
+    {
+      '1': 'unique_candidates_tried',
+      '3': 7,
+      '4': 1,
+      '5': 4,
+      '10': 'uniqueCandidatesTried'
+    },
+    {'1': 'total_attempts', '3': 8, '4': 1, '5': 4, '10': 'totalAttempts'},
+    {'1': 'search_elapsed_ms', '3': 9, '4': 1, '5': 4, '10': 'searchElapsedMs'},
+    {
+      '1': 'last_search_elapsed_ms',
+      '3': 10,
+      '4': 1,
+      '5': 4,
+      '10': 'lastSearchElapsedMs'
+    },
+    {
+      '1': 'search_in_progress',
+      '3': 11,
+      '4': 1,
+      '5': 8,
+      '10': 'searchInProgress'
+    },
+    {'1': 'state_loaded', '3': 12, '4': 1, '5': 8, '10': 'stateLoaded'},
+    {'1': 'state_saved', '3': 13, '4': 1, '5': 8, '10': 'stateSaved'},
+    {'1': 'state_error', '3': 14, '4': 1, '5': 9, '10': 'stateError'},
+    {'1': 'blackout', '3': 15, '4': 1, '5': 8, '10': 'blackout'},
+    {'1': 'blackout_reason', '3': 16, '4': 1, '5': 9, '10': 'blackoutReason'},
+    {'1': 'coverage_percent', '3': 17, '4': 1, '5': 5, '10': 'coveragePercent'},
+    {'1': 'coverage_target', '3': 18, '4': 1, '5': 5, '10': 'coverageTarget'},
+    {
+      '1': 'per_candidate',
+      '3': 19,
+      '4': 3,
+      '5': 11,
+      '6': '.hcore.GetAdaptiveStateResponse.PerCandidateEntry',
+      '10': 'perCandidate'
+    },
+    {'1': 'dpi_gate_enabled', '3': 20, '4': 1, '5': 8, '10': 'dpiGateEnabled'},
+    {'1': 'dpi_gate_reason', '3': 21, '4': 1, '5': 9, '10': 'dpiGateReason'},
+    {'1': 'candidate_count', '3': 22, '4': 1, '5': 5, '10': 'candidateCount'},
+    {'1': 'swap_generation', '3': 23, '4': 1, '5': 4, '10': 'swapGeneration'},
   ],
+  '3': [GetAdaptiveStateResponse_PerCandidateEntry$json],
+};
+
+@$core.Deprecated('Use getAdaptiveStateResponseDescriptor instead')
+const GetAdaptiveStateResponse_PerCandidateEntry$json = {
+  '1': 'PerCandidateEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 4, '10': 'value'},
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `GetAdaptiveStateResponse`. Decode as a `google.protobuf.DescriptorProto`.
@@ -753,4 +806,18 @@ final $typed_data.Uint8List getAdaptiveStateResponseDescriptor = $convert.base64
     'ChhHZXRBZGFwdGl2ZVN0YXRlUmVzcG9uc2USFAoFc3RhdGUYASABKAlSBXN0YXRlEhsKCWFjdG'
     'l2ZV9pZBgCIAEoCVIIYWN0aXZlSWQSGwoJbGFzdF9nb29kGAMgASgJUghsYXN0R29vZBIaCghh'
     'dHRlbXB0cxgEIAEoBFIIYXR0ZW1wdHMSHgoKZ2VuZXJhdGlvbhgFIAEoBFIKZ2VuZXJhdGlvbh'
-    'IWCgZjbG9zZWQYBiABKAhSBmNsb3NlZA==');
+    'IWCgZjbG9zZWQYBiABKAhSBmNsb3NlZBI2Chd1bmlxdWVfY2FuZGlkYXRlc190cmllZBgHIAEo'
+    'BFIVdW5pcXVlQ2FuZGlkYXRlc1RyaWVkEiUKDnRvdGFsX2F0dGVtcHRzGAggASgEUg10b3RhbE'
+    'F0dGVtcHRzEioKEXNlYXJjaF9lbGFwc2VkX21zGAkgASgEUg9zZWFyY2hFbGFwc2VkTXMSMwoW'
+    'bGFzdF9zZWFyY2hfZWxhcHNlZF9tcxgKIAEoBFITbGFzdFNlYXJjaEVsYXBzZWRNcxIsChJzZW'
+    'FyY2hfaW5fcHJvZ3Jlc3MYCyABKAhSEHNlYXJjaEluUHJvZ3Jlc3MSIQoMc3RhdGVfbG9hZGVk'
+    'GAwgASgIUgtzdGF0ZUxvYWRlZBIfCgtzdGF0ZV9zYXZlZBgNIAEoCFIKc3RhdGVTYXZlZBIfCg'
+    'tzdGF0ZV9lcnJvchgOIAEoCVIKc3RhdGVFcnJvchIaCghibGFja291dBgPIAEoCFIIYmxhY2tv'
+    'dXQSJwoPYmxhY2tvdXRfcmVhc29uGBAgASgJUg5ibGFja291dFJlYXNvbhIpChBjb3ZlcmFnZV'
+    '9wZXJjZW50GBEgASgFUg9jb3ZlcmFnZVBlcmNlbnQSJwoPY292ZXJhZ2VfdGFyZ2V0GBIgASgF'
+    'Ug5jb3ZlcmFnZVRhcmdldBJWCg1wZXJfY2FuZGlkYXRlGBMgAygLMjEuaGNvcmUuR2V0QWRhcH'
+    'RpdmVTdGF0ZVJlc3BvbnNlLlBlckNhbmRpZGF0ZUVudHJ5UgxwZXJDYW5kaWRhdGUSKAoQZHBp'
+    'X2dhdGVfZW5hYmxlZBgUIAEoCFIOZHBpR2F0ZUVuYWJsZWQSJgoPZHBpX2dhdGVfcmVhc29uGB'
+    'UgASgJUg1kcGlHYXRlUmVhc29uEicKD2NhbmRpZGF0ZV9jb3VudBgWIAEoBVIOY2FuZGlkYXRl'
+    'Q291bnQSJwoPc3dhcF9nZW5lcmF0aW9uGBcgASgEUg5zd2FwR2VuZXJhdGlvbho/ChFQZXJDYW'
+    '5kaWRhdGVFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEoBFIFdmFsdWU6AjgB');
